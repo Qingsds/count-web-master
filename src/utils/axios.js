@@ -15,7 +15,7 @@ axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers['Authorization'] = `${
   localStorage.getItem('token') || null
 }`
-axios.defaults.headers.post['Content-type'] = 'application/json'
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 axios.interceptors.response.use(res => {
   if (typeof res.data !== 'object') {
@@ -24,11 +24,11 @@ axios.interceptors.response.use(res => {
   }
   //处理已定义的错误
   if (res.data.errno !== 0) {
-    if (res.data.message) Toast.show(message)
+    if (res.data.message) Toast.show(res.data.message)
     if (res.data.errno === 10005) {
       window.location.href = '/login'
     }
-    return Promise.reject(res)
+    return Promise.reject(res.data)
   }
 
   return res.data
