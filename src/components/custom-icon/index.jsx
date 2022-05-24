@@ -1,3 +1,7 @@
+/**
+ * @description 图标
+ * @author qingsds
+ */
 import { Icon } from 'zarm'
 
 export default Icon.createFromIconfont(

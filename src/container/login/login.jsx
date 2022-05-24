@@ -1,12 +1,18 @@
+/**
+ * @description 登录页面
+ * @author qingsds
+ */
 import { Cell, Input, Button, Checkbox, Toast } from 'zarm'
 import CustomIcon from '../../components/custom-icon'
 import Captcha from 'react-captcha-code'
 import style from './style.module.less'
 import { post } from '../../utils/index'
-import { useReducer, useState } from 'react'
+import { useReducer } from 'react'
 import classNames from 'classnames'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
+  // 这里由于需要的变量太多,由 useState 改为 useReducer
   const [state, dispatch] = useReducer(
     (state, action) => ({ ...state, ...action }),
     {
@@ -18,6 +24,7 @@ export default function Login() {
       agree: false,
     }
   )
+  const navigate = useNavigate()
   const { type, username, password, verify, captcha, agree } = state
   const isRegister = type === 'register'
   const isLogin = type === 'login'
@@ -42,6 +49,7 @@ export default function Login() {
         Toast.show('登录成功')
         // 设置 token
         window.localStorage.setItem('token', res.data.token)
+        navigate('/')
       } catch (error) {
         Toast.show(error.message)
       }
@@ -58,7 +66,7 @@ export default function Login() {
       return
     }
     try {
-      const res = await post('/api/user/register', { username, password })
+      await post('/api/user/register', { username, password })
       Toast.show('注册成功')
       dispatch({ type: 'login' })
     } catch (error) {
@@ -71,13 +79,17 @@ export default function Login() {
       <div className={style.tab}>
         <span
           className={classNames({ [style.active]: type === 'login' })}
-          onClick={() => dispatch({ type: 'login' })}
+          onClick={() => {
+            dispatch({ type: 'login', username: '', password: '' })
+          }}
         >
           登录
         </span>
         <span
           className={classNames({ [style.active]: type === 'register' })}
-          onClick={() => dispatch({ type: 'register' })}
+          onClick={() =>
+            dispatch({ type: 'register', username: '', password: '' })
+          }
         >
           注册
         </span>

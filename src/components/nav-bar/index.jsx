@@ -1,3 +1,7 @@
+/**
+ * @description 底部导航条
+ * @author qingsds
+ */
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TabBar } from 'zarm'
