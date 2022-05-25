@@ -22,7 +22,6 @@ export default function User() {
     }
   }
 
-  console.log(user)
 
   return (
     user && (

@@ -9,7 +9,7 @@ import CustomIcon from '../custom-icon'
 import style from './style.module.less'
 
 const NavBar = ({ showNav }) => {
-  const [activeKey, setActiveKey] = useState(window.location.pathname)
+  const [activeKey, setActiveKey] = useState(window.location.pathname||'/')
   const navigate = useNavigate()
 
   const handleChange = path => {

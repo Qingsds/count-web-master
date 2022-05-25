@@ -4,17 +4,19 @@ import { ConfigProvider } from 'zarm'
 import zhCN from 'zarm/lib/config-provider/locale/zh_CN'
 import NavBar from './components/nav-bar'
 import { useEffect, useMemo, useState } from 'react'
+import { useAuth } from './context'
 
 function App() {
   const location = useLocation()
   const { pathname } = location
   const [showNav, setShowNav] = useState(false)
   const needNav = useMemo(() => ['/', '/data', '/user'], [])
+
   // navBar 会根据 pathname 来判断是否显示
   useEffect(() => {
     setShowNav(needNav.includes(pathname))
   }, [pathname, needNav])
-
+  const user = useAuth()
   return (
     <ConfigProvider primaryColor='#007fff' locale={zhCN}>
       <>

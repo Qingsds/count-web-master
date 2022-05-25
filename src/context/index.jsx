@@ -8,39 +8,50 @@ const UserContext = React.createContext()
 export const ContextProvider = ({ children }) => {
   const [userInfo, setInfo] = useState()
   const navigate = useNavigate()
+  const token = window.localStorage.getItem('token')
   // 加载用户信息
   const fetch = useCallback(async () => {
-    const res = await get('/api/user/user_info')
-    const { userInfo } = res.data
-    setInfo(userInfo)
+    try {
+      const res = await get('/api/user/user_info')
+      const { userInfo } = res.data
+      setInfo(userInfo)
+    } catch (error) {
+      console.log(error)
+    }
   }, [])
 
   //处理首次渲染的家长
   useEffect(() => {
-    fetch()
-  }, [fetch])
+    //存在 token 时 fetch data
+    if (token) {
+      fetch()
+    } else {
+      console.log('else')
+      navigate('/login')
+    }
+  }, [fetch, navigate, token])
 
   const logout = useCallback(() => {
-    window.localStorage.setItem('token')
-    navigate('/')
+    window.localStorage.removeItem('token')
+    navigate('/login')
   }, [navigate])
-  
+
   const update = useCallback(
-    async (params) => {
+    async params => {
       await post('/api/user/edit_user_info', { ...params })
       fetch()
     },
     [fetch]
   )
   const updatePassword = useCallback(
-    async (params) => {
+    async params => {
       await post('/api/user/modify_password', { ...params })
       logout()
     },
     [logout]
   )
-
-  if (!userInfo) {
+  // 存在 token 时 loading
+  if (!userInfo && token) {
     return <FullPageLoading />
   }
 
